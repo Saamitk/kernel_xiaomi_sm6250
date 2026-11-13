@@ -318,7 +318,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 ARCH		:= arm64
-CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
+CROSS_COMPILE := aarch64-linux-gnu-
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
@@ -368,8 +368,8 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
 HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
 HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
 
-HOSTCC       = gcc
-HOSTCXX      = g++
+HOSTCC = clang
+HOSTCXX = clang++
 HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 \
 		-fomit-frame-pointer -std=gnu11 -pipe $(HOST_LFS_CFLAGS)
 
@@ -383,17 +383,19 @@ HOSTCFLAGS  += -Wno-unused-value -Wno-unused-parameter \
 endif
 
 # Make variables (CC, etc...)
-AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
-CC		= $(CROSS_COMPILE)gcc
-LDGOLD		= $(CROSS_COMPILE)ld.gold
+AS = llvm-as
+LD = ld.lld
+LDGOLD = ld.lld
+CC = clang
+LD = ld.lld
+LDGOLD = ld.lld.gold
 CPP		= $(CC) -E
-AR		= $(CROSS_COMPILE)ar
-NM		= $(CROSS_COMPILE)nm
-STRIP		= $(CROSS_COMPILE)strip
-OBJCOPY		= $(CROSS_COMPILE)objcopy
-OBJDUMP		= $(CROSS_COMPILE)objdump
-READELF		= $(CROSS_COMPILE)readelf
+AR = llvm-ar
+NM = llvm-nm
+STRIP = llvm-strip
+OBJCOPY = llvm-objcopy
+OBJDUMP = llvm-objdump
+READELF = llvm-readelf
 PAHOLE		= pahole
 RESOLVE_BTFIDS	= $(objtree)/tools/bpf/resolve_btfids/resolve_btfids
 AWK		= awk
